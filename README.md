@@ -1,4 +1,6 @@
-# Getting Started with Create React App
+## Create React App
+이번 과제에서는 GPT를 최대한 활용하여, Netflix와 비슷한 Front-End Demo site를 만들고자 합니다. 
+React.js 또는 Vue.js를 활용해 Single Page Application (SPA)를 개발하고, 이를 Github pages를 활용하여 정적 웹사이트 배포까지 실습하는 것을 목표로하고 개발하였습니다.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
