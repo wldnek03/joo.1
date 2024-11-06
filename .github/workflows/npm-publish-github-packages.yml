@@ -1,13 +1,10 @@
 name: Deploy website to GitHub Pages
 
 on:
-  # Trigger the workflow every time you push to the `main` branch
   push:
     branches: ["main"]
-  # Allows you to run this workflow manually from the Actions tab on GitHub.
   workflow_dispatch:
 
-# Provide permission to clone the repo and deploy it to GitHub Pages
 permissions:
   contents: read
   pages: write
@@ -18,14 +15,12 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Build website
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          # Fetch history for build context if needed
           fetch-depth: 0
       - name: Install Dependencies
         run: |
@@ -38,9 +33,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist/management
+          path: ./build  # React의 경우 기본적으로 build 폴더가 생성됩니다.
 
-  # Deploy website to GitHub Pages hosting
   deploy:
     environment:
       name: github-pages
