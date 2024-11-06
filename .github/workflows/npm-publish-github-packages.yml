@@ -38,7 +38,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist  # 빌드된 파일이 위치한 폴더 이름으로 수정하세요.
+          path: ./dist/joo.1
 
   # Deploy website to GitHub Pages hosting
   deploy:
