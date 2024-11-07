@@ -1,48 +1,67 @@
 import React, { useEffect, useState } from 'react';
-import { fetchPopularMovies } from '../api/movieService';  // API 서비스에서 인기 영화 가져오는 함수
+import './movies.css'; // CSS 파일 불러오기
+import { fetchPopularMovies, fetchTrendingMovies, fetchTopRatedMovies, fetchNewReleases } from '../api/movieService';
+
+function MovieRow({ title, movies }) {
+  return (
+    <div className="movie-row">
+      <h3>{title}</h3> {/* 타이틀 표시 */}
+      <div className="movie-row__posters">
+        {movies.map((movie) => (
+          <div key={movie.id} className="movie-row__poster">
+            <img
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={movie.title}
+            />
+            <p>{movie.title}</p> {/* 영화 제목 */}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function PopularMovies() {
-  const [movies, setMovies] = useState([]);  // 영화 목록 상태
-  const [loading, setLoading] = useState(true);  // 로딩 상태
+  const [popularMovies, setPopularMovies] = useState([]);
+  const [trendingMovies, setTrendingMovies] = useState([]);
+  const [topRatedMovies, setTopRatedMovies] = useState([]);
+  const [newReleases, setNewReleases] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // 영화 데이터 API 호출
   useEffect(() => {
-    async function loadMovies() {
+    async function loadAllMovies() {
       try {
-        const data = await fetchPopularMovies();  // API로 인기 영화 목록 가져오기
-        setMovies(data.results);  // 받아온 데이터를 상태에 저장
+        const popularData = await fetchPopularMovies();
+        const trendingData = await fetchTrendingMovies();
+        const topRatedData = await fetchTopRatedMovies();
+        const newReleasesData = await fetchNewReleases();
+
+        setPopularMovies(popularData.results);
+        setTrendingMovies(trendingData.results);
+        setTopRatedMovies(topRatedData.results);
+        setNewReleases(newReleasesData.results);
       } catch (error) {
-        console.error('영화 데이터 로딩 실패:', error);
+        console.error('영화 데이터를 불러오는데 실패했습니다:', error);
       } finally {
-        setLoading(false);  // 로딩 완료
+        setLoading(false);
       }
     }
-    loadMovies();
+    loadAllMovies();
   }, []);
 
   if (loading) {
-    return <div>로딩 중...</div>;  // 로딩 중일 때 메시지
+    return <div>로딩 중...</div>;
   }
 
   return (
-    <div>
-      <h3>인기 영화 목록</h3>
-      {movies.length === 0 ? (
-        <div>영화가 없습니다.</div>  // 영화 목록이 없을 경우 메시지
-      ) : (
-        <div>
-          {movies.map((movie) => (
-            <div key={movie.id}>
-              <h4>{movie.title}</h4>
-              <img
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={movie.title}
-                style={{ width: '200px' }}
-              />
-            </div>
-          ))}
-        </div>
-      )}
+    <div className="netflix-like-movies">
+      <h2>넷플릭스 스타일 영화 목록</h2>
+
+      {/* 각 카테고리별 영화 목록 */}
+      <MovieRow title="인기 영화" movies={popularMovies} />
+      <MovieRow title="트렌딩 영화" movies={trendingMovies} />
+      <MovieRow title="최고 평점 영화" movies={topRatedMovies} />
+      <MovieRow title="새로운 개봉작" movies={newReleases} />
     </div>
   );
 }
